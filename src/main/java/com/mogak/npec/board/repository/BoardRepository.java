@@ -18,5 +18,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("select b from Board b where b.content like %:query% or b.title like %:query%")
     Page<Board> searchBoard(@Param("query") String query, Pageable pageable);
 
-    List<Board> findAllByIdIn(List<Long> boardIds);
+    @Query("select b from Board b join fetch b.member m where b.id in (:boardIds) ")
+    List<Board> findAllByIdIn(@Param("boardIds") List<Long> boardIds);
 }
