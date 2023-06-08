@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class AuthService {
@@ -61,12 +60,10 @@ public class AuthService {
         boolean isValidRefreshToken = tokenProvider.isValid(extractedRefreshToken);
 
         if (isValidAccessToken && isValidRefreshToken) {
-            blackListRepository.saveAll(List.of(
-                    new BlackList(extractedAccessToken, accessTokenExpire),
-                    new BlackList(extractedRefreshToken, refreshTokenExpire))
-            );
+            blackListRepository.save(new BlackList(extractedAccessToken, tokenProvider.getLeftExpireTimeFromToken(extractedAccessToken)));
+            blackListRepository.save(new BlackList(extractedRefreshToken, tokenProvider.getLeftExpireTimeFromToken(extractedRefreshToken)));
         } else if (isValidRefreshToken) {
-            blackListRepository.save(new BlackList(extractedRefreshToken, refreshTokenExpire));
+            blackListRepository.save(new BlackList(extractedRefreshToken, tokenProvider.getLeftExpireTimeFromToken(extractedRefreshToken)));
 
         } else {
             throw new InvalidTokenException("유효한 토큰이 아닙니다.");

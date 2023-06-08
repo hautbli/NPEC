@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Component
@@ -53,13 +56,36 @@ public class TokenProvider {
                 .compact();
     }
 
-    public Long getParsedClaims(String token) {
+    public Long getMemberIdFromToken(String token) {
         try {
             Claims claims = jwtParser
                     .parseClaimsJws(token)
                     .getBody();
 
             return claims.get("memberId", Long.class);
+
+        } catch (ExpiredJwtException ex) {
+            throw new InvalidTokenException("만료기간이 지난 토큰입니다.");
+        } catch (SignatureException ex) {
+            throw new InvalidTokenException("믿을 수 없는 토큰입니다.");
+        } catch (MalformedJwtException ex) {
+            throw new InvalidTokenException("올바른 토큰 형태가 아닙니다.");
+        } catch (UnsupportedJwtException | IllegalArgumentException exception) {
+            throw new InvalidTokenException("지원하지 않는 토큰 형식입니다.");
+        }
+    }
+
+    public long getLeftExpireTimeFromToken(String token) {
+        try {
+            Date expiration = jwtParser
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getExpiration();
+
+            LocalDateTime expireDateTime = LocalDateTime.ofInstant(expiration.toInstant(), ZoneId.systemDefault());
+            LocalDateTime now = LocalDateTime.now();
+
+            return Duration.between(now, expireDateTime).getSeconds();
 
         } catch (ExpiredJwtException ex) {
             throw new InvalidTokenException("만료기간이 지난 토큰입니다.");

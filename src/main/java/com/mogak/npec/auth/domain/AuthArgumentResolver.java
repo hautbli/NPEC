@@ -36,6 +36,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
             throw new InvalidTokenException("헤더가 없습니다.");
         }
         String token = tokenExtractor.extractToken(authorization);
-        return tokenProvider.getParsedClaims(token);
+        return tokenProvider.getMemberIdFromToken(token);
     }
 }
