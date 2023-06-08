@@ -80,6 +80,7 @@ public class BoardService {
     public BoardListResponse getBoards(int page, SortType sortType) {
         PageRequest pageable = PageRequest.of(page, 10, Sort.by(sortType.getSortField()).descending());
 
+        // todo 없애버릴까? member n+1 발생
         if (sortType.equals(SortType.LATEST)) {
             Page<Board> boards = boardRepository.findAll(pageable);
             List<Long> boardIds = boards.stream()
