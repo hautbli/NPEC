@@ -21,7 +21,7 @@ spring:
       on-profile: local
 
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/npec
+    url: jdbc:mysql://127.0.0.1:3306/npec_local
   jpa:
     hibernate:
       ddl-auto: update
@@ -46,8 +46,18 @@ spring:
       on-profile: test
 
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/npectest
-
+    url: jdbc:mysql://127.0.0.1:3306/npec_test
   jpa:
     hibernate:
       ddl-auto: create
+---
+spring:
+  config:
+    activate:
+      on-profile: dummy
+
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/npec_local
+  jpa:
+    hibernate:
+      ddl-auto: update
