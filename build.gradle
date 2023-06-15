@@ -54,15 +54,10 @@ dependencies {
     }
 
     // bulk insert test
-    testImplementation 'org.jeasy:easy-random-core:5.0.0'
+    implementation 'org.jeasy:easy-random-core:5.0.0'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:5.3.0'
-}
-
-test {
-    exclude("com/mogak/npec/board/application/BoardBulkInsertTest.class")
-    exclude("com/mogak/npec/fixture/**")
 }
 
 tasks.named('test') {

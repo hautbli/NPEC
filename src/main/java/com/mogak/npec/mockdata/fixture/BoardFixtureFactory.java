@@ -1,4 +1,4 @@
-package com.mogak.npec.fixture;
+package com.mogak.npec.mockdata.fixture;
 
 import com.mogak.npec.board.domain.Board;
 import org.jeasy.random.EasyRandom;
