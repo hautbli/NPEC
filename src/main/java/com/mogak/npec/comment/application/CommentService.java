@@ -110,10 +110,11 @@ public class CommentService {
     public CommentsResponse findComments(FindCommentsServiceDto dto) {
         Board board = findBoard(dto.boardId());
 
-        List<CommentResponse> commentResponses;
-
         List<Comment> parents = commentRepository.findParentsByBoardId(board.getId());
-        commentResponses = parents.stream().map(this::toCommentResponse).collect(Collectors.toList());
+
+        List<CommentResponse> commentResponses = parents.stream()
+                .map(this::toCommentResponse)
+                .collect(Collectors.toList());
 
         return new CommentsResponse(commentResponses);
     }
@@ -125,16 +126,17 @@ public class CommentService {
     }
 
     private List<ReplyResponse> getReplyResponses(Comment comment) {
-        if (comment.getChildren().isEmpty()) {
+        List<Comment> children = comment.getChildren();
+        if (children.isEmpty()) {
             return new ArrayList<>();
         }
-        return comment.getChildren().stream()
+        return children.stream()
                 .map(this::toReplyResponse)
                 .collect(Collectors.toList());
     }
 
-    private ReplyResponse toReplyResponse(Comment comment) {
-        return ReplyResponse.of(comment);
+    private ReplyResponse toReplyResponse(Comment reply) {
+        return ReplyResponse.of(reply);
     }
 
     @Transactional
