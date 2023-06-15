@@ -45,7 +45,7 @@ public class ControllerErrorAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException e) {
-        log.error(e.getMessage());
+        log.error("handle exception:", e);
         return ResponseEntity.internalServerError().body(new ErrorResponse("서버 내부에 문제가 발생했습니다."));
     }
 
