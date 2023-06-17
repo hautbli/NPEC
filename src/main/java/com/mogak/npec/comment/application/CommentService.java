@@ -8,7 +8,15 @@ import com.mogak.npec.board.exceptions.BoardNotFoundException;
 import com.mogak.npec.board.repository.BoardRepository;
 import com.mogak.npec.board.repository.BoardSortRepository;
 import com.mogak.npec.comment.domain.Comment;
-import com.mogak.npec.comment.dto.*;
+import com.mogak.npec.comment.dto.CommentModifyResponse;
+import com.mogak.npec.comment.dto.CommentResponse;
+import com.mogak.npec.comment.dto.CommentsResponse;
+import com.mogak.npec.comment.dto.CreateCommentServiceDto;
+import com.mogak.npec.comment.dto.CreateReplyServiceDto;
+import com.mogak.npec.comment.dto.DeleteCommentServiceDto;
+import com.mogak.npec.comment.dto.FindCommentsServiceDto;
+import com.mogak.npec.comment.dto.ModifyCommentServiceDto;
+import com.mogak.npec.comment.dto.ReplyResponse;
 import com.mogak.npec.comment.exception.CommentCanNotModifyException;
 import com.mogak.npec.comment.exception.CommentDepthExceedException;
 import com.mogak.npec.comment.exception.CommentNotFoundException;
@@ -110,7 +118,7 @@ public class CommentService {
     public CommentsResponse findComments(FindCommentsServiceDto dto) {
         Board board = findBoard(dto.boardId());
 
-        List<Comment> parents = commentRepository.findParentsByBoardId(board.getId());
+        List<Comment> parents = commentRepository.findParentsByBoardId(board.getId(), dto.lastParentId());
 
         List<CommentResponse> commentResponses = parents.stream()
                 .map(this::toCommentResponse)

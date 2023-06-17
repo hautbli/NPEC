@@ -2,11 +2,27 @@ package com.mogak.npec.comment.controller;
 
 import com.mogak.npec.auth.annotation.ValidToken;
 import com.mogak.npec.comment.application.CommentService;
-import com.mogak.npec.comment.dto.*;
+import com.mogak.npec.comment.dto.CommentCreateRequest;
+import com.mogak.npec.comment.dto.CommentModifyRequest;
+import com.mogak.npec.comment.dto.CommentModifyResponse;
+import com.mogak.npec.comment.dto.CommentsResponse;
+import com.mogak.npec.comment.dto.CreateCommentServiceDto;
+import com.mogak.npec.comment.dto.CreateReplyServiceDto;
+import com.mogak.npec.comment.dto.DeleteCommentServiceDto;
+import com.mogak.npec.comment.dto.FindCommentsServiceDto;
+import com.mogak.npec.comment.dto.ModifyCommentServiceDto;
+import com.mogak.npec.comment.dto.ReplyCreateRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class CommentController {
@@ -34,8 +50,8 @@ public class CommentController {
     }
 
     @GetMapping("/boards/{boardId}/comments")
-    public ResponseEntity<CommentsResponse> findComments(@PathVariable Long boardId, @ValidToken Long memberId) {
-        CommentsResponse response = commentService.findComments(new FindCommentsServiceDto(memberId, boardId));
+    public ResponseEntity<CommentsResponse> findComments(@PathVariable Long boardId, @RequestParam(required = false) Long lastParentId) {
+        CommentsResponse response = commentService.findComments(new FindCommentsServiceDto(boardId, lastParentId));
 
         return ResponseEntity.ok(response);
     }
@@ -56,5 +72,4 @@ public class CommentController {
 
         return ResponseEntity.noContent().build();
     }
-
 }

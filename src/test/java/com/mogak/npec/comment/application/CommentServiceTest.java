@@ -204,7 +204,7 @@ public class CommentServiceTest {
 
         commentRepository.save(parent);
         commentRepository.save(child);
-        FindCommentsServiceDto dto = new FindCommentsServiceDto(member.getId(), board.getId());
+        FindCommentsServiceDto dto = new FindCommentsServiceDto(board.getId(), null);
 
         // when
         CommentsResponse comments = commentService.findComments(dto);
@@ -229,7 +229,7 @@ public class CommentServiceTest {
 
         commentRepository.save(parent);
         commentRepository.save(child);
-        FindCommentsServiceDto dto = new FindCommentsServiceDto(member.getId(), board.getId());
+        FindCommentsServiceDto dto = new FindCommentsServiceDto(board.getId(), null);
 
         // when
         CommentsResponse comments = commentService.findComments(dto);
@@ -249,7 +249,7 @@ public class CommentServiceTest {
     @Test
     void responseWhenNoComments() {
         // given
-        FindCommentsServiceDto dto = new FindCommentsServiceDto(member.getId(), board.getId());
+        FindCommentsServiceDto dto = new FindCommentsServiceDto(board.getId(), null);
 
         // when
         CommentsResponse comments = commentService.findComments(dto);
@@ -259,6 +259,43 @@ public class CommentServiceTest {
         assertThat(comments.getComments()).isEmpty();
     }
 
+    @DisplayName("lastParentId 가 주어지면 그 다음 id 댓글들을 page size 리턴한다.")
+    @Test
+    void findCommentWithLastParentId() {
+        // given
+        saveCommentAndReply(member, board);
+        saveCommentAndReply(member, board);
+        Long lastId = saveCommentAndReply(member, board).getId();
+
+        Comment comment1 = saveCommentAndReply(member, board);
+        Comment comment2 = saveCommentAndReply(member, board);
+        Comment comment3 = saveCommentAndReply(member, board);
+
+        FindCommentsServiceDto dto = new FindCommentsServiceDto(board.getId(), lastId);
+
+        // when
+        CommentsResponse comments = commentService.findComments(dto);
+
+        // then
+        assertAll(
+                () -> assertThat(comments.getCount()).isEqualTo(3),
+                () -> assertThat(comments.getComments().get(0).getId()).isEqualTo(comment1.getId()),
+                () -> assertThat(comments.getComments().get(0).getReplies().size()).isEqualTo(1),
+                () -> assertThat(comments.getComments().get(1).getId()).isEqualTo(comment2.getId()),
+                () -> assertThat(comments.getComments().get(1).getReplies().size()).isEqualTo(1),
+                () -> assertThat(comments.getComments().get(2).getId()).isEqualTo(comment3.getId()),
+                () -> assertThat(comments.getComments().get(2).getReplies().size()).isEqualTo(1)
+        );
+    }
+
+    private Comment saveCommentAndReply(Member member, Board board) {
+        Comment parent = Comment.parent(member, board, "댓글내용", false);
+        Comment child = Comment.child(member, board, parent, "대댓글내용", false);
+
+        commentRepository.save(parent);
+        commentRepository.save(child);
+        return parent;
+    }
 
     @DisplayName("작성자의 수정 요청일 경우 댓글이 수정된다.")
     @Test

@@ -5,5 +5,5 @@ import com.mogak.npec.comment.domain.Comment;
 import java.util.List;
 
 public interface CommentQueryRepository {
-    List<Comment> findParentsByBoardId(Long boardId);
+    List<Comment> findParentsByBoardId(Long boardId, Long lastParentId);
 }
