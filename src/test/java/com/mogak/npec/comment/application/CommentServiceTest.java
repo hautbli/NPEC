@@ -200,7 +200,6 @@ public class CommentServiceTest {
         // given
         Comment parent = Comment.parent(member, board, "댓글내용", false);
         Comment child = Comment.child(member, board, parent, "대댓글내용", false);
-        parent.getChildren().add(child);
 
         commentRepository.save(parent);
         commentRepository.save(child);
@@ -225,7 +224,6 @@ public class CommentServiceTest {
         // given
         Comment parent = Comment.parent(member, board, "댓글내용", true);
         Comment child = Comment.child(member, board, parent, "대댓글내용", true);
-        parent.getChildren().add(child);
 
         commentRepository.save(parent);
         commentRepository.save(child);
