@@ -118,7 +118,7 @@ public class CommentService {
     public CommentsResponse findComments(FindCommentsServiceDto dto) {
         Board board = findBoard(dto.boardId());
 
-        List<Comment> parents = commentRepository.findParentsByBoardId(board.getId(), dto.lastParentId());
+        List<Comment> parents = commentRepository.findPagedParentsByBoardId(board.getId(), dto.lastCommentId(), dto.size());
 
         List<CommentResponse> commentResponses = parents.stream()
                 .map(this::toCommentResponse)

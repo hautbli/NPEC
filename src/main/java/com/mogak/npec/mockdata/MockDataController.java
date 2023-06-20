@@ -190,7 +190,7 @@ public class MockDataController {
         List<Member> members2 = allMembers.subList(10, allMembers.size());
         System.out.println("members2 = " + members2.size());
 
-        CommentsResponse comments = commentService.findComments(new FindCommentsServiceDto(1L, boardId));
+        CommentsResponse comments = commentService.findComments(new FindCommentsServiceDto(1L, boardId, 100));
 
         for (int i = 0; i < comments.getComments().size(); i++) {
             List<Member> replayMembers = members2.subList(0, 2);

@@ -16,7 +16,7 @@ public class CommentQueryRepositoryImpl implements CommentQueryRepository {
     }
 
     @Override
-    public List<Comment> findParentsByBoardId(Long boardId, Long lastCommentId) {
+    public List<Comment> findPagedParentsByBoardId(long boardId, Long lastCommentId, int size) {
         return queryFactory
                 .selectFrom(comment)
                 .where(
@@ -25,7 +25,7 @@ public class CommentQueryRepositoryImpl implements CommentQueryRepository {
                         comment.parent.isNull()
                 )
                 .orderBy(comment.id.asc())
-                .limit(10)
+                .limit(size)
                 .fetch();
     }
 

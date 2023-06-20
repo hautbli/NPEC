@@ -203,7 +203,7 @@ public class CommentServiceTest {
 
         commentRepository.save(parent);
         commentRepository.save(child);
-        FindCommentsServiceDto dto = new FindCommentsServiceDto(board.getId(), null);
+        FindCommentsServiceDto dto = new FindCommentsServiceDto(board.getId(), 0L, 10);
 
         // when
         CommentsResponse comments = commentService.findComments(dto);
@@ -227,7 +227,7 @@ public class CommentServiceTest {
 
         commentRepository.save(parent);
         commentRepository.save(child);
-        FindCommentsServiceDto dto = new FindCommentsServiceDto(board.getId(), null);
+        FindCommentsServiceDto dto = new FindCommentsServiceDto(board.getId(), 0L, 10);
 
         // when
         CommentsResponse comments = commentService.findComments(dto);
@@ -247,7 +247,7 @@ public class CommentServiceTest {
     @Test
     void responseWhenNoComments() {
         // given
-        FindCommentsServiceDto dto = new FindCommentsServiceDto(board.getId(), null);
+        FindCommentsServiceDto dto = new FindCommentsServiceDto(board.getId(), 0L, 10);
 
         // when
         CommentsResponse comments = commentService.findComments(dto);
@@ -257,7 +257,7 @@ public class CommentServiceTest {
         assertThat(comments.getComments()).isEmpty();
     }
 
-    @DisplayName("lastParentId 가 주어지면 그 다음 id 댓글들을 page size 리턴한다.")
+    @DisplayName("lastCommentId 가 주어지면 그 다음 id 댓글들을 리턴한다.")
     @Test
     void findCommentWithLastParentId() {
         // given
@@ -269,7 +269,7 @@ public class CommentServiceTest {
         Comment comment2 = saveCommentAndReply(member, board);
         Comment comment3 = saveCommentAndReply(member, board);
 
-        FindCommentsServiceDto dto = new FindCommentsServiceDto(board.getId(), lastId);
+        FindCommentsServiceDto dto = new FindCommentsServiceDto(board.getId(), lastId, 10);
 
         // when
         CommentsResponse comments = commentService.findComments(dto);
